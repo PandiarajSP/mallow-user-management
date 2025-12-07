@@ -1,0 +1,47 @@
+body {
+  margin: 0 !important;
+  font-family: 'Inter', sans-serif;
+}
+
+.ant-layout{
+  background-color: #f3f7fb !important;
+}
+.ant-layout-content{
+  background-color: #f3f7fb !important;
+  padding: 50px;
+}
+.primary-btn .ant-btn {
+  border-radius: 0px !important;
+  background-color: #035397;
+  color: #fff;
+  border: none;
+}
+
+.primary-btn .ant-btn:hover {
+  background-color: #116ddd !important;
+  box-shadow: none;
+}
+
+.primary-btn .ant-btn:active {
+  background-color: #05409f !important;
+  box-shadow: none;
+}
+
+.primary-btn .ant-btn:focus {
+  background-color: #036cff !important;
+  box-shadow: inset 0 0 0 2px #fff, 0 0 0 2px #116ddd;
+  outline: none;
+}
+
+
+
+:root {
+  --color-primary: #405FFF;
+  --color-secondary: #6c757d;
+  --color-success: #28a745;
+  --color-danger: #dc3545;
+  --color-background: #f8f9fa;
+  --color-text: #212529;
+  --color-selected: #4E3EBF;
+  --color-selected-text: #FFFFFF;
+}
