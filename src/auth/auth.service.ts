@@ -1,10 +1,10 @@
 import { AppDispatch } from "../store";
 import commonApiService from "../utils/api.utils";
-
+const apiUrl = process.env.REACT_APP_API_URL;
 class AuthService {
   async loginUser(dispatch: AppDispatch, payload: object) {
     try {
-      let url = `https://reqres.in/api/login`;
+      let url = `${apiUrl}/login`;
 
       const resp = await commonApiService(url, "POST", dispatch, payload);
       return resp;
