@@ -15,7 +15,7 @@ class AuthService {
   }
   async logoutUser(dispatch: AppDispatch) {
     try {
-      let url = `https://reqres.in/api/logout`;
+      let url = `${apiUrl}/logout`;
 
       const resp = await commonApiService(url, "POST", dispatch);
       return resp;

@@ -1,27 +1,28 @@
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../store";
 import { setError } from "../store/errorSlice";
-import { Modal } from "antd";
+import ModalComponent from "./modal-component/ModalComponent";
 
 const GlobalErrorHandler = () => {
   const error = useSelector((state: RootState) => state.globalError.error);
   const dispatch = useDispatch();
 
   const handleClose = () => {
-    dispatch(setError(null)); 
+    dispatch(setError(null));
   };
 
   if (!error) return null;
 
   return (
-    <Modal
+    <ModalComponent
       title={error.title}
-      open={!!error}
-      onOk={handleClose}
+      message={error.message}
+      showCloseButton={false}
+      onConfirm={handleClose}
+      confirmButtonText="Close"
       onCancel={handleClose}
-    >
-      <p>{error.message}</p>
-    </Modal>
+      visible={!!error}
+    />
   );
 };
 

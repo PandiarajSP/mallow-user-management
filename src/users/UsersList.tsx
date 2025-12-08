@@ -1,9 +1,8 @@
 import {
   DeleteFilled,
   EditOutlined,
-  UnorderedListOutlined,
-  AppstoreOutlined,
   TableOutlined,
+  UnorderedListOutlined,
 } from "@ant-design/icons";
 import {
   Avatar,
@@ -17,19 +16,19 @@ import {
   TableProps,
 } from "antd";
 
-import { useEffect, useMemo, useState } from "react";
 import { Tabs } from "antd";
+import { useEffect, useMemo, useState } from "react";
 
-import { useNavigate } from "react-router-dom";
 import { LoadingOutlined } from "@ant-design/icons";
-import "./UserList.css";
+import { useDispatch } from "react-redux";
 import Search from "../components/search-component/SearchComponent";
+import { AppDispatch } from "../store";
+import TestErrorButton from "../utils/TestErrorButton";
 import { UserModel } from "./user.model";
 import userService from "./user.service";
 import UsersCreateOrEdit from "./UserCreateOrEdit";
-import { AppDispatch } from "../store";
-import { useDispatch } from "react-redux";
-import TestErrorButton from "../utils/TestErrorButton";
+import "./UserList.css";
+import ModalComponent from "../components/modal-component/ModalComponent";
 
 const UserList: React.FC = () => {
   const [sourceInfoData, setSourceInfoData] = useState<UserModel[]>([]);
@@ -44,6 +43,9 @@ const UserList: React.FC = () => {
   const [modalUserData, setModalUserData] = useState<UserModel | null>(null);
   const [modalTitle, setModalTitle] = useState("Create User");
   const [viewMode, setViewMode] = useState<"list" | "card">("list");
+  const [confirmDeleteModalVisible, setConfirmDeleteModalVisible] =
+    useState(false);
+  const [userToDelete, setUserToDelete] = useState<UserModel | null>(null);
 
   const dispatch = useDispatch<AppDispatch>();
 
@@ -60,7 +62,6 @@ const UserList: React.FC = () => {
     setModalVisible(true);
   };
 
-  // Fetch all users (all pages) once
   const fetchAllUsers = async () => {
     setSpinStatus(true);
     try {
@@ -97,22 +98,25 @@ const UserList: React.FC = () => {
     fetchAllUsers();
   }, []);
 
-  // Filtered data for current page
   const paginatedUsers = useMemo(() => {
     const startIndex = (currentPage - 1) * pageSize;
     return filteredSourceTableData.slice(startIndex, startIndex + pageSize);
   }, [filteredSourceTableData, currentPage, pageSize]);
 
-  const handleDelete = (record: Record<string, any>) => {
-    if(record) {
-      
+  const handleDelete = (record: UserModel) => {
+    setUserToDelete(record);
+    setConfirmDeleteModalVisible(true);
+  };
+  const handleDeleteConfirm = async () => {
+    if (userToDelete) {
+      setSpinStatus(true);
+      await userService.deleteUser(dispatch, userToDelete.id.toString());
+      setConfirmDeleteModalVisible(false);
+      fetchAllUsers();
+      setSpinStatus(true);
     }
-    userService.deleteUser(dispatch, record?.id).then(() => {
-
-    });
   };
 
-  // Table columns
   const tableColumns: TableProps<UserModel>["columns"] = [
     {
       dataIndex: "avatar",
@@ -168,7 +172,6 @@ const UserList: React.FC = () => {
     },
   ];
 
-  // Handle search results
   const onTableSearch = (filteredData: UserModel[]) => {
     setFilteredSourceTableData(filteredData);
     setCurrentPage(1);
@@ -187,7 +190,7 @@ const UserList: React.FC = () => {
               </div>
               <div
                 className="action-btn delete-btn"
-                onClick={() => console.log("Delete:", user.id)}
+                onClick={() => handleDelete(user)}
               >
                 <DeleteFilled />
               </div>
@@ -221,9 +224,6 @@ const UserList: React.FC = () => {
           <span style={{ fontSize: 25, fontWeight: "bold" }}>Users</span>
         </Col>
         <Col>
-          <TestErrorButton />
-        </Col>
-        <Col>
           <Row gutter={16} align="middle">
             <Col>
               <Search<UserModel>
@@ -248,7 +248,7 @@ const UserList: React.FC = () => {
         defaultActiveKey="list"
         activeKey={viewMode}
         onChange={(key) => setViewMode(key as "list" | "card")}
-        tabBarStyle={{ marginBottom: 0 }} // also removes spacing bottom
+        tabBarStyle={{ marginBottom: 0 }}
         items={[
           {
             key: "list",
@@ -269,7 +269,7 @@ const UserList: React.FC = () => {
                   total: filteredSourceTableData.length,
                   onChange: (page) => setCurrentPage(page),
                   showSizeChanger: false,
-                  position: ["bottomRight"],
+                  placement: ["bottomEnd"],
                 }}
                 scroll={{ x: "max-content" }}
               />
@@ -313,6 +313,16 @@ const UserList: React.FC = () => {
         userData={modalUserData}
         editMode={modalEditMode}
         cardTitle={modalTitle}
+      />
+      <ModalComponent
+        title="Delete User"
+        message={`Are you sure you want to delete this user?`}
+        showCloseButton={true}
+        onConfirm={handleDeleteConfirm}
+        onCancel={() => setConfirmDeleteModalVisible(false)}
+        confirmButtonText="Delete"
+        cancelButtonText="Cancel"
+        visible={confirmDeleteModalVisible}
       />
     </Spin>
   );

@@ -1,4 +1,3 @@
-// services/commonApiService.ts
 import sessionService from "../services/session.service";
 import { AppDispatch } from "../store";
 import { setError } from "../store/errorSlice";
@@ -19,13 +18,13 @@ const commonApiService = async (
     if (payload && method !== "GET") options.body = JSON.stringify(payload);
 
     const response = await fetch(url, options);
-    const text = await response.text(); // read body once
+    const text = await response.text();
     let data: any = null;
 
     try {
       data = text ? JSON.parse(text) : null;
     } catch {
-      data = text; // fallback if not JSON
+      data = text;
     }
 
     if (response.status === 401) {
@@ -66,7 +65,6 @@ const commonApiService = async (
           errorMessage = data;
         }
       } catch (e) {
-        // Not JSON, maybe plain text
         if (text) errorMessage = text;
       }
 

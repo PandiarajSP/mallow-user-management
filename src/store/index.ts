@@ -1,11 +1,8 @@
-// store/index.ts
 import { configureStore } from "@reduxjs/toolkit";
 import errorReducer from "./errorSlice";
-import userReducer from "./userSlice";
 export const store = configureStore({
   reducer: {
-    globalError: errorReducer,
-    user: userReducer,
+    globalError: errorReducer
   },
 });
 

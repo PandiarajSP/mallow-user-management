@@ -2,8 +2,6 @@ import { Navigate } from "react-router-dom";
 import AuthPage from "./auth/AuthPage";
 import MainLayout from "./layouts/MainLayout";
 import UserList from "./users/UsersList";
-import UsersCreateOrEdit from "./users/UserCreateOrEdit";
-// import MainLayout from "./layouts/MainLayout";
 
 const routes = [
   {
@@ -21,9 +19,5 @@ const routes = [
       }
     ],
   },
-  //   {
-  //     path: "/*",
-  //     element: <MainLayout />,
-  //   },
 ];
 export default routes;

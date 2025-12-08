@@ -1,13 +1,12 @@
+import { LockOutlined, UserOutlined } from "@ant-design/icons";
+import { Alert, Button, Checkbox, Form, Input, Spin } from "antd";
 import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import sessionService from "../services/session.service";
+import { AppDispatch } from "../store";
 import "./AuthPage.css";
 import authService from "./auth.service";
-import { Alert, Button, Form, Input, Spin, Typography, Checkbox } from "antd";
-import sessionService from "../services/session.service";
-import { LockOutlined, UserOutlined } from "@ant-design/icons";
-import { AppDispatch } from "../store";
-import { useDispatch } from "react-redux";
-import { setUserEmail } from "../store/userSlice";
 
 const AuthPage = () => {
   const [spinStatus, setSpinStatus] = useState(false);
@@ -28,7 +27,6 @@ const AuthPage = () => {
     setFormError(null);
 
     try {
-      // Login request
       let payload = {
         email: values.email,
         password: values.password,
@@ -91,7 +89,7 @@ const AuthPage = () => {
 
             {formError && (
               <Alert
-                message={formError}
+                description={formError}
                 type="error"
                 showIcon
                 style={{ marginBottom: 16 }}

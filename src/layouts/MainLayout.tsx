@@ -1,26 +1,21 @@
 import { LogoutOutlined } from "@ant-design/icons";
 import { Col, Layout, Row } from "antd";
 import { Content, Footer, Header } from "antd/es/layout/layout";
-import { useDispatch, useSelector } from "react-redux";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { Outlet, useNavigate } from "react-router-dom";
+import authService from "../auth/auth.service";
 import "../index.css";
 import sessionService from "../services/session.service";
-import { AppDispatch, RootState } from "../store";
-import "./MainLayout.css";
-import { clearUser } from "../store/userSlice";
-import authService from "../auth/auth.service";
+import { AppDispatch } from "../store";
 import { setError } from "../store/errorSlice";
-import { useEffect, useState } from "react";
+import "./MainLayout.css";
 
 const MainLayout: React.FC = () => {
   const navigate = useNavigate();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const dispatch = useDispatch<AppDispatch>();
-
-  type UserState = RootState["user"];
-
-  const user: UserState = useSelector((state: RootState) => state.user);
 
   useEffect(() => {
     const email = sessionStorage.getItem("userEmail");
@@ -35,7 +30,6 @@ const MainLayout: React.FC = () => {
       .logoutUser(dispatch)
       .then(() => {
         sessionService.clear();
-        dispatch(clearUser());
         navigate("/login");
       })
       .catch((err) => {
@@ -108,7 +102,6 @@ const MainLayout: React.FC = () => {
               background: "#f9fafc",
               minHeight: 280,
               padding: 24,
-              // borderRadius: borderRadiusLG,
             }}
           >
             <Outlet />
